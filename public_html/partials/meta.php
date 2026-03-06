@@ -37,7 +37,7 @@ $display_title = (stripos($page_title, 'Astroyds') === false)
     : $page_title;
 
 $base_url  = defined('SITE_URL') ? SITE_URL : 'https://astroyds.com';
-$theme_cls = is_dark_mode() ? 'dark' : '';
+$theme_class = is_dark_mode() ? 'dark' : '';
 ?>
 <!-- ====================================================================
      HEAD — Astroyds

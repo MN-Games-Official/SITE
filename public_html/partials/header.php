@@ -102,7 +102,9 @@ $base_url = defined('SITE_URL') ? SITE_URL : 'https://astroyds.com';
                             aria-haspopup="true"
                             aria-expanded="false"
                             id="companies-menu-btn"
-                            onclick="document.getElementById('companies-dropdown').classList.toggle('hidden')">
+                            onclick="var dd=document.getElementById('companies-dropdown');
+                                     dd.classList.toggle('hidden');
+                                     this.setAttribute('aria-expanded', dd.classList.contains('hidden')?'false':'true')">
                         Companies
                         <!-- Chevron icon -->
                         <svg class="h-4 w-4 text-slate-400 group-hover:text-white transition-transform duration-200"
