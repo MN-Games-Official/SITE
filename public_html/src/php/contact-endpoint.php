@@ -62,7 +62,10 @@ if (!csrf_validate($csrf_token)) {
 $rate_limit_dir = __DIR__ . '/../../data/rate_limits';
 
 if (!is_dir($rate_limit_dir)) {
-    mkdir($rate_limit_dir, 0750, true);
+    if (!mkdir($rate_limit_dir, 0750, true) && !is_dir($rate_limit_dir)) {
+        error_log('[Astroyds] Failed to create rate limit directory: ' . $rate_limit_dir);
+        // Allow the request through rather than blocking all submissions
+    }
 }
 
 /**
@@ -85,9 +88,12 @@ function check_rate_limit(string $dir, string $ip, int $max = 5, int $window = 3
 
     $timestamps = [];
     if (is_file($file)) {
-        $data = json_decode((string) file_get_contents($file), true);
-        if (is_array($data)) {
-            $timestamps = $data;
+        $contents = file_get_contents($file);
+        if ($contents !== false) {
+            $data = json_decode($contents, true);
+            if (is_array($data)) {
+                $timestamps = $data;
+            }
         }
     }
 
@@ -102,7 +108,11 @@ function check_rate_limit(string $dir, string $ip, int $max = 5, int $window = 3
     }
 
     $timestamps[] = $now;
-    file_put_contents($file, json_encode($timestamps), LOCK_EX);
+
+    if (file_put_contents($file, json_encode($timestamps), LOCK_EX) === false) {
+        // If we can't write the counter, allow the request but log the issue
+        error_log('[Astroyds] Failed to write rate limit file: ' . $file);
+    }
 
     return true;
 }

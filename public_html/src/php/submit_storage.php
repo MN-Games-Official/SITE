@@ -43,7 +43,9 @@ define('SQLITE_DB_PATH', DATA_DIR . '/submissions.db');
 function ensure_directory(string $dir, int $mode = 0750): void
 {
     if (!is_dir($dir)) {
-        mkdir($dir, $mode, true);
+        if (!mkdir($dir, $mode, true) && !is_dir($dir)) {
+            throw new \RuntimeException("Failed to create directory: {$dir}");
+        }
     }
 }
 
