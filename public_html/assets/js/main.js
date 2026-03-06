@@ -608,6 +608,8 @@
         href.startsWith("mailto:") ||
         href.startsWith("tel:") ||
         href.startsWith("javascript:") ||
+        href.startsWith("data:") ||
+        href.startsWith("vbscript:") ||
         link.target === "_blank" ||
         link.hasAttribute("download")
       ) {
